@@ -212,6 +212,43 @@ public class Vala.Scanner {
 							current++;
 							token_length_in_chars++;
 							break;
+
+						case 'k':
+							current++;
+							token_length_in_chars++;
+							if (current[0] != '<') {
+								Report.error (get_source_reference (token_length_in_chars), "group name required");
+								break;
+							}
+
+							current++;
+							token_length_in_chars++;
+
+
+							// group name:
+							if (!current[0].isalpha () && current[0] != '_') {
+								Report.error (get_source_reference (token_length_in_chars), "invalid group name");
+								break;
+							}
+
+							current++;
+							token_length_in_chars++;
+
+							while (current[0].isalnum () || current[0] == '_') {
+								current++;
+								token_length_in_chars++;
+							}
+
+
+							if (current[0] != '>') {
+								Report.error (get_source_reference (token_length_in_chars), "invalid group name");
+								break;
+							}
+
+							current++;
+							token_length_in_chars++;
+							break;
+
 						case 'u':
 							// u escape character has four hex digits
 							current++;
@@ -239,6 +276,17 @@ public class Vala.Scanner {
 							}
 							break;
 						default:
+							if (current[0] >= '0' && current[0] <= '9') {
+								current++;
+								token_length_in_chars++;
+
+								while (current[0] >= '0' && current[0] <= 9) {
+									current++;
+									token_length_in_chars++;
+								}
+								break;
+							}
+
 							Report.error (get_source_reference (token_length_in_chars), "invalid escape sequence");
 							break;
 						}
