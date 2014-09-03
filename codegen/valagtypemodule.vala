@@ -70,8 +70,10 @@ public class Vala.GTypeModule : GErrorModule {
 			macro = "(G_TYPE_CHECK_INSTANCE_CAST ((obj), %s, %s))".printf (get_ccode_type_id (cl), get_ccode_name (cl));
 			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_upper_case_name (cl, null)), macro));
 
-			macro = "(G_TYPE_CHECK_CLASS_CAST ((klass), %s, %sClass))".printf (get_ccode_type_id (cl), get_ccode_name (cl));
-			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s_CLASS(klass)".printf (get_ccode_upper_case_name (cl, null)), macro));
+			if (!(decl_space.is_external_header && cl.is_sealed)) {
+				macro = "(G_TYPE_CHECK_CLASS_CAST ((klass), %s, %sClass))".printf (get_ccode_type_id (cl), get_ccode_name (cl));
+				decl_space.add_type_declaration (new CCodeMacroReplacement ("%s_CLASS(klass)".printf (get_ccode_upper_case_name (cl, null)), macro));
+			}
 
 			macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (get_ccode_type_id (cl));
 			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_type_check_function (cl)), macro));
@@ -79,9 +81,11 @@ public class Vala.GTypeModule : GErrorModule {
 			macro = "(G_TYPE_CHECK_CLASS_TYPE ((klass), %s))".printf (get_ccode_type_id (cl));
 			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s_CLASS(klass)".printf (get_ccode_type_check_function (cl)), macro));
 
-			macro = "(G_TYPE_INSTANCE_GET_CLASS ((obj), %s, %sClass))".printf (get_ccode_type_id (cl), get_ccode_name (cl));
-			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s_GET_CLASS(obj)".printf (get_ccode_upper_case_name (cl, null)), macro));
-			decl_space.add_type_declaration (new CCodeNewline ());
+			if (!(decl_space.is_external_header && cl.is_sealed)) {
+				macro = "(G_TYPE_INSTANCE_GET_CLASS ((obj), %s, %sClass))".printf (get_ccode_type_id (cl), get_ccode_name (cl));
+				decl_space.add_type_declaration (new CCodeMacroReplacement ("%s_GET_CLASS(obj)".printf (get_ccode_upper_case_name (cl, null)), macro));
+				decl_space.add_type_declaration (new CCodeNewline ());
+			}
 		}
 
 		if (cl.is_compact && cl.base_class != null && !is_gsource) {
@@ -187,7 +191,9 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		if (is_gtypeinstance) {
-			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%sClass".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("%sClass".printf (get_ccode_name (cl)))));
+			if (!(decl_space.is_external_header && cl.is_sealed)) {
+				decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%sClass".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("%sClass".printf (get_ccode_name (cl)))));
+			}
 
 			var type_fun = new ClassRegisterFunction (cl, context);
 			type_fun.init_from_type (in_plugin, true);
@@ -374,7 +380,7 @@ public class Vala.GTypeModule : GErrorModule {
 			decl_space.add_type_definition (instance_struct);
 		}
 
-		if (is_gtypeinstance) {
+		if (is_gtypeinstance && !(decl_space.is_external_header && cl.is_sealed)) {
 			decl_space.add_type_definition (type_struct);
 		}
 	}

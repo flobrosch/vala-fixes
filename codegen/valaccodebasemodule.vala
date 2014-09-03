@@ -501,6 +501,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		header_file = new CCodeFile ();
 		header_file.is_header = true;
+		header_file.is_external_header = true;
 		internal_header_file = new CCodeFile ();
 		internal_header_file.is_header = true;
 

@@ -38,6 +38,12 @@ public class Vala.Class : ObjectTypeSymbol {
 	public bool is_abstract { get; set; }
 
 	/**
+	 * Specifies whether this class is sealed. Sealed classes may not be
+	 * subclassed.
+	 */
+	public bool is_sealed { get; set; }
+
+	/**
 	 * Instances of compact classes are fast to create and have a
 	 * compact memory layout. Compact classes don't support runtime
 	 * type information or virtual methods.

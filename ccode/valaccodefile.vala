@@ -23,6 +23,7 @@
 
 public class Vala.CCodeFile {
 	public bool is_header { get; set; }
+	public bool is_external_header { get; set; }
 
 	Set<string> declarations = new HashSet<string> (str_hash, str_equal);
 	Set<string> includes = new HashSet<string> (str_hash, str_equal);
