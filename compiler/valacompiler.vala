@@ -418,6 +418,8 @@ class Vala.Compiler {
 			}
 
 			library = null;
+		} else if (gir != null) {
+			Report.warning (null, "--gir has no effect when --library is not set");
 		}
 
 		// The GIRWriter places the gir_namespace and gir_version into the top namespace, so write the vapi after that stage
