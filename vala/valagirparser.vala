@@ -853,6 +853,8 @@ public class Vala.GirParser : CodeVisitor {
 							}
 						}
 					}
+				} else if (element_type == "class") {
+					((Class) symbol).is_sealed = true;
 				}
 			}
 
