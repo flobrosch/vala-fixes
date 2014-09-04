@@ -72,7 +72,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 					Report.error (type.source_reference, "Base class cycle (`%s' and `%s')".printf (cl.get_full_name (), cl.base_class.get_full_name ()));
 					return;
 				}
-				if (cl.base_class.is_sealed) {
+				if (cl.base_class.is_sealed && type.source_reference.file.file_type == SourceFileType.SOURCE) {
 					cl.error = true;
 					Report.error (type.source_reference, "Sealed classes may not be subclassed");
 				}
