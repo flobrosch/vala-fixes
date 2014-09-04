@@ -869,7 +869,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			}
 		}
 
-		if (is_abstract && is_sealed) {
+		if (is_abstract && is_sealed && context.analyzer.current_source_file.file_type == SourceFileType.SOURCE) {
 			error = true;
 			Report.error (source_reference, "abstract classes cannot be sealed");
 		}

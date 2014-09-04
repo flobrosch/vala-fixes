@@ -235,9 +235,12 @@ public class Vala.CodeWriter : CodeVisitor {
 		
 		write_indent ();
 		write_accessibility (cl);
+		// sealed abstract classes are valid cases
+		// in various bindings.
 		if (cl.is_abstract) {
 			write_string ("abstract ");
-		} else if (cl.is_sealed) {
+		}
+		if (cl.is_sealed) {
 			write_string ("sealed ");
 		}
 		write_string ("class ");
