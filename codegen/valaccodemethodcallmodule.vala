@@ -35,12 +35,17 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		Method m = null;
 		Delegate deleg = null;
 		List<Parameter> params;
-		
+
 		var ma = expr.call as MemberAccess;
-		
+		if (ma != null) {
+			foreach (DataType type_arg in ma.get_type_arguments ()) {
+				check_type_argument (type_arg);
+			}
+		}
+
 		var itype = expr.call.value_type;
 		params = itype.get_parameters ();
-		
+
 		if (itype is MethodType) {
 			assert (ma != null);
 			m = ((MethodType) itype).method_symbol;

@@ -4379,7 +4379,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	void check_type_argument (DataType type_arg) {
+	public void check_type_argument (DataType type_arg) {
 		if (type_arg is GenericType
 		    || type_arg is PointerType
 		    || is_reference_type_argument (type_arg)
