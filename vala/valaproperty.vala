@@ -364,6 +364,12 @@ public class Vala.Property : Symbol, Lockable {
 					Report.error (source_reference, "Virtual properties may not be declared in compact classes");
 					return false;
 				}
+
+				if (cl.is_sealed && source_reference.file.file_type == SourceFileType.SOURCE) {
+					error = true;
+					Report.error (source_reference, "Virtual properties may not be declared in sealed classes");
+					return false;
+				}
 			}
 		} else if (overrides) {
 			if (!(parent_symbol is Class)) {

@@ -639,6 +639,11 @@ public class Vala.Method : Subroutine {
 					Report.error (source_reference, "Virtual methods may not be declared in compact classes");
 					return false;
 				}
+
+				if (cl.is_sealed && source_reference.file.file_type == SourceFileType.SOURCE) {
+					Report.error (source_reference, "Virtual methods may not be declared in sealed classes");
+					return false;
+				}
 			}
 		} else if (overrides) {
 			if (!(parent_symbol is Class)) {
