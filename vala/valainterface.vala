@@ -165,6 +165,12 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 * @param f a field
 	 */
 	public override void add_field (Field f) {
+		if (f.binding == MemberBinding.CLASS) {
+			Report.error (f.source_reference, "class members are not allowed in interfaces");
+			f.error = true;
+			return;
+		}
+
 		fields.add (f);
 		scope.add (f.name, f);
 	}
