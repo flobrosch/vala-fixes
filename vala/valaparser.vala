@@ -2739,6 +2739,13 @@ public class Vala.Parser : CodeVisitor {
 		} else if (ModifierFlags.CLASS in flags) {
 			prop.binding = MemberBinding.CLASS;
 		}
+		if (prop.binding != MemberBinding.INSTANCE) {
+			if (ModifierFlags.ABSTRACT in flags
+				|| ModifierFlags.VIRTUAL in flags
+				|| ModifierFlags.OVERRIDE in flags) {
+				throw new ParseError.SYNTAX (get_error ("the modifiers `abstract', `virtual', and `override' are not valid for %s properties".printf ((ModifierFlags.CLASS in flags)? "class" : "static")));
+			}
+		}
 		if (ModifierFlags.ABSTRACT in flags) {
 			prop.is_abstract = true;
 		}
