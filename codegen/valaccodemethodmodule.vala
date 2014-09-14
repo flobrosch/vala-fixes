@@ -309,6 +309,14 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		if (m.get_attribute ("NoArrayLength") != null) {
 			Report.deprecated (m.source_reference, "NoArrayLength attribute is deprecated, use [CCode (array_length = false)] instead.");
 		}
+		if (m.binding == MemberBinding.CLASS) {
+			var cl = current_type_symbol as Class;
+			if (cl.is_compact) {
+				Report.error (m.source_reference, "class methods are not supported in compact classes");
+				m.error = true;
+				return;
+			}
+		}
 
 		if (m is CreationMethod) {
 			var cl = current_type_symbol as Class;
