@@ -79,6 +79,12 @@ public class Vala.Enum : TypeSymbol {
 			m.error = true;
 			return;
 		}
+		if (m.binding == MemberBinding.CLASS) {
+			Report.error (m.source_reference, "class members are not allowed in enums");
+
+			m.error = true;
+			return;
+		}
 		if (m.binding == MemberBinding.INSTANCE) {
 			m.this_parameter = new Parameter ("this", new EnumValueType (this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
