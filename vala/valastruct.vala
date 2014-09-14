@@ -206,6 +206,12 @@ public class Vala.Struct : TypeSymbol {
 			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_data_type_for_symbol (this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
+		if (m.binding == MemberBinding.CLASS) {
+			Report.error (m.source_reference, "class members are not allowed in structs");
+
+			m.error = true;
+			return;
+		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
 			m.result_var = new LocalVariable (m.return_type.copy (), "result", null, source_reference);
 			m.result_var.is_result = true;
