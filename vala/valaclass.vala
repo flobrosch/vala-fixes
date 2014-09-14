@@ -353,7 +353,11 @@ public class Vala.Class : ObjectTypeSymbol {
 		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 
 		if (prop.field != null) {
-			add_field (prop.field);
+			if (prop.binding == MemberBinding.INSTANCE && is_compact) {
+				Report.error (prop.source_reference, "automatic properties are not supported in compact classes");
+			} else {
+				add_field (prop.field);
+			}
 		}
 	}
 	
