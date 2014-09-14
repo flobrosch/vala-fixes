@@ -62,6 +62,12 @@ public class Vala.ErrorDomain : TypeSymbol {
 			m.error = true;
 			return;
 		}
+		if (m.binding == MemberBinding.CLASS) {
+			Report.error (m.source_reference, "class members are not allowed in errordomains");
+
+			m.error = true;
+			return;
+		}
 		if (m.binding == MemberBinding.INSTANCE) {
 			m.this_parameter = new Parameter ("this", new ErrorType (this, null));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
