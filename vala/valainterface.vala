@@ -214,6 +214,12 @@ public class Vala.Interface : ObjectTypeSymbol {
 			prop.error = true;
 			return;
 		}
+		if (prop.field != null) {
+			Report.error (prop.source_reference, "automatic properties are not allowed in interfaces");
+
+			prop.error = true;
+			return;
+		}
 
 		properties.add (prop);
 		scope.add (prop.name, prop);
