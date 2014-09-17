@@ -446,6 +446,14 @@ public class Vala.MemberAccess : Expression {
 					may_access_klass_members = true;
 				}
 			}
+
+			ArrayType value_array_type = inner.value_type as ArrayType;
+			if (value_array_type != null && value_array_type.inline_allocated) {
+				if (symbol_reference is ArrayResizeMethod) {
+					Report.error (source_reference, "`resize' is not supported for arrays with fix lengths");
+					error = true;
+				}
+			}
 		}
 
 		if (symbol_reference == null) {
