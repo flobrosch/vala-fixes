@@ -322,6 +322,10 @@ public class Vala.Assignment : Expression {
 						return false;
 					}
 				}
+			} else if (ma.symbol_reference is ArrayLengthField && ((ArrayType) ma.inner.value_type).inline_allocated) {
+				error = true;
+				Report.error (source_reference, "array length fields of fix size arrays are read-only");
+				return false;
 			} else if (ma.symbol_reference is Variable && right.value_type == null) {
 				var variable = (Variable) ma.symbol_reference;
 
