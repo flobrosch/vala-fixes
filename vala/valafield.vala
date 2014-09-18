@@ -123,6 +123,9 @@ public class Vala.Field : Variable, Lockable {
 			return false;
 		}
 
+
+		ArrayType variable_array_type = variable_type as ArrayType;
+
 		if (initializer != null) {
 			initializer.target_type = variable_type;
 
@@ -152,7 +155,6 @@ public class Vala.Field : Variable, Lockable {
 				return false;
 			}
 
-			ArrayType variable_array_type = variable_type as ArrayType;
 			if (variable_array_type != null && variable_array_type.inline_allocated && !variable_array_type.fixed_length && is_initializer_list) {
 				variable_array_type.length = new IntegerLiteral (initializer_size.to_string ());
 				variable_array_type.fixed_length = true;
@@ -190,6 +192,12 @@ public class Vala.Field : Variable, Lockable {
 				error = true;
 				Report.error (source_reference, "External fields cannot use initializers");
 			}
+		}
+
+		if (variable_array_type != null && variable_array_type.inline_allocated && !variable_array_type.fixed_length) {
+			error = true;
+			Report.error (source_reference, "inline allocated arrays without fix length are not possible");
+			return false;
 		}
 
 		if (binding == MemberBinding.INSTANCE && parent_symbol is Interface) {

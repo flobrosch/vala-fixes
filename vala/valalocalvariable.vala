@@ -130,6 +130,9 @@ public class Vala.LocalVariable : Variable {
 			initializer.target_type = variable_type;
 		}
 
+
+		ArrayType variable_array_type = variable_type as ArrayType;
+
 		if (initializer != null && !initializer.error) {
 			if (initializer.value_type == null) {
 				if (!(initializer is MemberAccess) && !(initializer is LambdaExpression)) {
@@ -165,7 +168,6 @@ public class Vala.LocalVariable : Variable {
 				return false;
 			}
 
-			ArrayType variable_array_type = variable_type as ArrayType;
 			if (variable_array_type != null && variable_array_type.inline_allocated && !variable_array_type.fixed_length && is_initializer_list) {
 				variable_array_type.length = new IntegerLiteral (initializer_size.to_string ());
 				variable_array_type.fixed_length = true;
@@ -187,6 +189,12 @@ public class Vala.LocalVariable : Variable {
 					return false;
 				}
 			}
+		}
+
+		if (variable_array_type != null && variable_array_type.inline_allocated && !variable_array_type.fixed_length) {
+			error = true;
+			Report.error (source_reference, "inline allocated arrays without fix length are not possible");
+			return false;
 		}
 
 		context.analyzer.current_symbol.scope.add (name, this);
