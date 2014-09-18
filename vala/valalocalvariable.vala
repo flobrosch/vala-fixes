@@ -156,6 +156,13 @@ public class Vala.LocalVariable : Variable {
 				return false;
 			}
 
+			ArrayType variable_array_type = variable_type as ArrayType;
+			if (variable_array_type != null && variable_array_type.inline_allocated && initializer.value_type is ArrayType == false) {
+				error = true;
+				Report.error (source_reference, "only arrays are allowed as initializer for arrays with fixed length");
+				return false;
+			}
+
 			if (initializer.value_type.is_disposable ()) {
 				/* rhs transfers ownership of the expression */
 				if (!(variable_type is PointerType) && !variable_type.value_owned) {

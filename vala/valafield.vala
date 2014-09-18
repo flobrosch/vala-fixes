@@ -143,6 +143,13 @@ public class Vala.Field : Variable, Lockable {
 				return false;
 			}
 
+			ArrayType variable_array_type = variable_type as ArrayType;
+			if (variable_array_type != null && variable_array_type.inline_allocated && initializer.value_type is ArrayType == false) {
+				error = true;
+				Report.error (source_reference, "only arrays are allowed as initializer for arrays with fixed length");
+				return false;
+			}
+
 			if (parent_symbol is Namespace && !initializer.is_constant ()) {
 				error = true;
 				Report.error (source_reference, "Non-constant field initializerS not supported in this context");
