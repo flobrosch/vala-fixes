@@ -126,6 +126,15 @@ public class Vala.Field : Variable, Lockable {
 		if (initializer != null) {
 			initializer.target_type = variable_type;
 
+			// Catch initializer list transformation:
+			bool is_initializer_list = false;
+			int initializer_size = -1;
+
+			if (initializer is InitializerList) {
+				initializer_size = ((InitializerList) initializer).size;
+				is_initializer_list = true;
+			}
+
 			if (!initializer.check (context)) {
 				error = true;
 				return false;
@@ -144,6 +153,11 @@ public class Vala.Field : Variable, Lockable {
 			}
 
 			ArrayType variable_array_type = variable_type as ArrayType;
+			if (variable_array_type != null && variable_array_type.inline_allocated && !variable_array_type.fixed_length && is_initializer_list) {
+				variable_array_type.length = new IntegerLiteral (initializer_size.to_string ());
+				variable_array_type.fixed_length = true;
+			}
+
 			if (variable_array_type != null && variable_array_type.inline_allocated && initializer.value_type is ArrayType == false) {
 				error = true;
 				Report.error (source_reference, "only arrays are allowed as initializer for arrays with fixed length");
